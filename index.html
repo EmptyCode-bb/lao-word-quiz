@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ラオス語単語クイズ</title>
     <style>
+        :root {
+            --primary-color: #1a73e8;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --bg-color: #f0f2f5;
+            --text-color: #333;
+        }
+
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
         }
+
         .container {
             background-color: white;
             padding: 2rem;
@@ -23,33 +32,40 @@
             max-width: 500px;
             text-align: center;
         }
-        h1 { color: #1a73e8; margin-bottom: 1.5rem; }
+
+        h1 { color: var(--primary-color); margin-bottom: 1.5rem; }
         .screen { display: none; }
         .active { display: block; }
+
         .btn {
-            background-color: #1a73e8;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 24px;
+            padding: 12px 24px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
+            font-weight: bold;
             transition: background-color 0.2s;
             margin-top: 1rem;
         }
+
         .btn:disabled { background-color: #ccc; cursor: not-allowed; }
         .btn:hover:not(:disabled) { background-color: #1557b0; }
+
         input[type="text"] {
             width: 80%;
-            padding: 10px;
+            padding: 12px;
             margin: 1rem 0;
             border: 2px solid #ddd;
             border-radius: 6px;
             font-size: 1.1rem;
             outline: none;
         }
-        input[type="text"]:focus { border-color: #1a73e8; }
-        .question-info { color: #666; margin-bottom: 0.5rem; }
+
+        input[type="text"]:focus { border-color: var(--primary-color); }
+        .question-info { color: #666; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+        
         .word-display { 
             font-family: 'Lao Sangam MN', 'Helvetica Neue', Arial, sans-serif;
             font-size: 2.5rem; 
@@ -57,11 +73,29 @@
             margin: 1.5rem 0; 
             color: #333; 
         }
+
         .feedback { margin-top: 1rem; font-weight: bold; min-height: 1.5rem; }
-        .correct { color: #28a745; }
-        .incorrect { color: #dc3545; }
+        .correct { color: var(--success-color); }
+        .incorrect { color: var(--error-color); }
         .result-text { font-size: 1.2rem; margin: 1.5rem 0; line-height: 1.6; }
         #loading-msg { color: #666; margin-bottom: 1rem; }
+
+        /* Ver0.5からの追加スタイル */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .sending-msg { font-size: 0.9rem; color: #666; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -69,21 +103,27 @@
 <div class="container">
     <!-- スタート画面 -->
     <div id="start-screen" class="screen active">
-        <h1>単語クイズ</h1>
+        <h1>ラオス語単語クイズ</h1>
         <div id="loading-msg">CSVファイルを読み込んでいます...</div>
-        <p>ラオス語の単語クイズを開始します（全10問）</p>
+        <p>画像を見て、正しい名前を選んでください。<br>全問からランダムに10問出題されます。</p>
         <button class="btn" id="start-btn" onclick="startQuiz()" disabled>開始する</button>
     </div>
 
     <!-- クイズ画面 -->
     <div id="quiz-screen" class="screen">
-        <div class="question-info">第 <span id="current-num">1</span> 問 / 10</div>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <div class="question-info">
+            <span>第 <span id="current-num">1</span> 問 / 10</span>
+            <span id="score-display">正解: 0</span>
+        </div>
         <div class="word-display" id="word-target">---</div>
         <p>この単語の日本語（単語またはふりがな）を入力してください</p>
         <input type="text" id="answer-input" placeholder="回答を入力..." autocomplete="off">
         <div id="feedback" class="feedback"></div>
         <button class="btn" id="submit-btn" onclick="checkAnswer()">回答する</button>
-        <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">次へ</button>
+        <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">次へ進む</button>
     </div>
 
     <!-- リザルト画面 -->
@@ -91,18 +131,28 @@
         <h1>結果発表</h1>
         <div class="result-text">
             <p>お疲れ様でした。</p>
-            <p>正解数: <span id="score">0</span> / 10</p>
+            <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">
+                <span id="score">0</span> / 10
+            </p>
+            <p>正答率: <span id="accuracy">0</span>%</p>
         </div>
+        <div id="sending-msg" class="sending-msg">結果を送信中...</div>
         <button class="btn" onclick="location.reload()">もう一度挑戦</button>
     </div>
 </div>
 
 <script>
+    // 設定
+    const GAS_URL = "ここにGASのウェブアプリURLを貼り付けてください"; 
+    const TOTAL_QUESTIONS = 10;
+
     let wordDict = {};
     let uniqueLaoWords = [];
     let currentQuestions = [];
     let currentIndex = 0;
     let score = 0;
+    let deviceId = localStorage.getItem('quiz_device_id') || 'Device-' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('quiz_device_id', deviceId);
 
     // ページ読み込み時にCSVを読み込む
     window.onload = async () => {
@@ -125,38 +175,37 @@
         const lines = text.split(/\r?\n/);
         wordDict = {};
         
-        // 2行目から読み込み（1行目はヘッダー）
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim();
             if (!line) continue;
             
-            // カンマ区切りで分割（引用符内のカンマを考慮しない簡易版）
             const parts = line.split(',');
             if (parts.length < 3) continue;
             
             const kanji = parts[0].trim();
             const kana = parts[1].trim();
-            let lao = parts[2].trim();
-            // ラオス語の前後の空白を削除
-            lao = lao.replace(/^\s+|\s+$/g, '');
+            let lao = parts[2].trim().replace(/^\s+|\s+$/g, '');
             
             if (!wordDict[lao]) {
                 wordDict[lao] = new Set();
             }
-            wordDict[lao].add(kanji);
-            wordDict[lao].add(kana);
+            wordDict[lao].add(normalizeText(kanji));
+            wordDict[lao].add(normalizeText(kana));
         }
         uniqueLaoWords = Object.keys(wordDict);
     }
 
+    function normalizeText(text) {
+        return text.replace(/[！-～]/g, function(s) {
+            return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+        }).replace(/\s+/g, '').toLowerCase();
+    }
+
     function startQuiz() {
         if (uniqueLaoWords.length === 0) return;
-        
-        // ランダムに10問選ぶ
-        currentQuestions = [...uniqueLaoWords].sort(() => 0.5 - Math.random()).slice(0, 10);
+        currentQuestions = [...uniqueLaoWords].sort(() => 0.5 - Math.random()).slice(0, TOTAL_QUESTIONS);
         currentIndex = 0;
         score = 0;
-        
         showScreen('quiz-screen');
         showQuestion();
     }
@@ -165,50 +214,100 @@
         const lao = currentQuestions[currentIndex];
         document.getElementById('current-num').textContent = currentIndex + 1;
         document.getElementById('word-target').textContent = lao;
+        document.getElementById('score-display').textContent = `正解: ${score}`;
         document.getElementById('answer-input').value = '';
+        document.getElementById('answer-input').disabled = false;
         document.getElementById('feedback').textContent = '';
         document.getElementById('feedback').className = 'feedback';
         document.getElementById('submit-btn').style.display = 'inline-block';
         document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('answer-input').disabled = false;
+        updateProgressBar();
         document.getElementById('answer-input').focus();
     }
 
-    function checkAnswer() {
-        const input = document.getElementById('answer-input').value.trim();
-        if (!input) return;
+    function updateProgressBar() {
+        const progress = (currentIndex / TOTAL_QUESTIONS) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
 
+    function checkAnswer() {
+        const inputElement = document.getElementById('answer-input');
+        const rawInput = inputElement.value.trim();
+        if (!rawInput) return;
+
+        const normalizedInput = normalizeText(rawInput);
         const lao = currentQuestions[currentIndex];
         const correctAnswers = wordDict[lao];
         const feedback = document.getElementById('feedback');
         
-        if (correctAnswers.has(input)) {
+        let isCorrect = false;
+        for (let ans of correctAnswers) {
+            if (normalizedInput === ans) {
+                isCorrect = true;
+                break;
+            }
+        }
+        
+        if (isCorrect) {
             feedback.textContent = '正解！';
             feedback.className = 'feedback correct';
             score++;
         } else {
-            const answersArray = Array.from(correctAnswers);
-            feedback.textContent = `不正解... 正解は「${answersArray.join('」または「')}」です`;
+            // 正解のテキストを取得（簡易版）
+            const correctText = Array.from(correctAnswers).join('」または「');
+            feedback.textContent = `不正解... 正解は「${correctText}」でした`;
             feedback.className = 'feedback incorrect';
         }
-
+        
+        document.getElementById('score-display').textContent = `正解: ${score}`;
         document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'inline-block';
-        document.getElementById('answer-input').disabled = true;
+        inputElement.disabled = true;
     }
 
     function nextQuestion() {
         currentIndex++;
-        if (currentIndex < 10) {
+        if (currentIndex < TOTAL_QUESTIONS) {
             showQuestion();
         } else {
+            document.getElementById('progress-bar').style.width = '100%';
             showResult();
         }
     }
 
     function showResult() {
         document.getElementById('score').textContent = score;
+        const accuracy = Math.round((score / TOTAL_QUESTIONS) * 100);
+        document.getElementById('accuracy').textContent = accuracy;
         showScreen('result-screen');
+        sendToGAS(score, TOTAL_QUESTIONS);
+    }
+
+    async function sendToGAS(score, total) {
+        const msg = document.getElementById('sending-msg');
+        if (!GAS_URL || GAS_URL.includes("ここに")) {
+            msg.textContent = "※GASのURLが設定されていないため、送信をスキップしました。";
+            return;
+        }
+
+        try {
+            await fetch(GAS_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    correct: score,
+                    total: total,
+                    deviceId: deviceId,
+                    timestamp: new Date().toISOString()
+                })
+            });
+            msg.textContent = "結果をスプレッドシートに送信しました。";
+            msg.style.color = "var(--success-color)";
+        } catch (err) {
+            msg.textContent = "送信に失敗しました。URLの設定を確認してください。";
+            msg.style.color = "var(--error-color)";
+        }
     }
 
     function showScreen(screenId) {
@@ -216,12 +315,11 @@
         document.getElementById(screenId).classList.add('active');
     }
 
-    // Enterキーで回答・次へ
     document.getElementById('answer-input').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             if (document.getElementById('submit-btn').style.display !== 'none') {
                 checkAnswer();
-            } else {
+            } else if (document.getElementById('next-btn').style.display !== 'none') {
                 nextQuestion();
             }
         }
