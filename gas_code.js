@@ -1,5 +1,5 @@
 /**
- * Google Apps Script: ラオス語単語クイズ回答データ受信用
+ * Google Apps Script: ラオス語単語クイズ回答データ受信用 (Ver0.5+ 対応版)
  * 
  * 手順:
  * 1. Googleスプレッドシートを新規作成します。
@@ -12,7 +12,15 @@
 
 function doPost(e) {
   try {
-    const params = JSON.parse(e.postData.contents);
+    let params;
+    
+    // JSON形式またはフォーム形式の両方に対応
+    if (e.postData.type === "application/json") {
+      params = JSON.parse(e.postData.contents);
+    } else {
+      params = e.parameter;
+    }
+    
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
     // ヘッダーがない場合は作成
@@ -24,14 +32,17 @@ function doPost(e) {
     const deviceId = params.deviceId || "unknown";
     const correct = params.correct;
     const total = params.total;
-    const rate = Math.round((correct / total) * 100) + "%";
+    const rate = total > 0 ? Math.round((correct / total) * 100) + "%" : "0%";
     
     sheet.appendRow([timestamp, deviceId, correct, total, rate]);
     
+    // CORS対応のためのレスポンス
     return ContentService.createTextOutput(JSON.stringify({ status: "success" }))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
+    // エラーログを記録（デバッグ用）
+    console.error(error.toString());
     return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }

@@ -5,139 +5,344 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ラオス語単語クイズ</title>
     <style>
+        @font-face {
+            font-family: 'Lao Sangam MN Custom';
+            src: url(data:font/truetype;charset=utf-8;base64,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AAQABgAHAAgACQALAA0ADgAPAAAACgAAAAIABAAGAAcACAAJAAsADQAOAAAACgAAAAIABAAGAAcACAAJAAsADQAOABAAIgAqADIAOgBCAE4AVgBeAGYAbgB2AH4AhgCOAJgAoAABAAAAAQCGAAEAAAABAIQABgAAAAEAvAABAAAAAQDGAAYAAAADANAA4gD0AAEAAAABAPoABgAAAAEBAAAEAAAAAQEKAAQAAAABAYgABAAAAAEBqgABAAAAAQHMAAYAAAABAc4AAQAAAAEB2AAGAAAAAgHyAgQABAAAAAECDAAEAAAAAQKiAAECrABVAAICrAAdAOYA5wDoAOkA6gDrAOwA7QDuAO8A8ADxAPIA8wD0APUA9gD3APgA+QD6APsA/AD9AP4A/wEAAQEBAgADAAAAAQJsAAECfAABAAAAAQACAnAABgC8AL0AvgC/AQsAuwADAAECSAABAl4AAAABAAAAAwADAAECVgABAkwAAAABAAAAAwADAAECSgABAjoAAAABAAAAAwACAj4ABADfAOABAwEEAAMAAAABAjAAAQIUAAEAAAAFAAECKAAIABYAKAA6AEwAXgBoAHIAfAACAAYADADfAAIApQDfAAIAuwACAAYADADgAAIApQDgAAIAuwACAAYADAEDAAIApQEDAAIAuwACAAYADAEEAAIApQEEAAIAuwABAAQA3wACAKUAAQAEAOAAAgClAAEABAEDAAIApQABAAQBBAACAKUAAQGyAAEACAAEAAoAEAAWABwBBQACAJUBBgACAJYBBQACALYBBgACALcAAQGOAAEACAAEAAoAEAAWABwBBwACAJUBCAACAJYBBwACALYBCAACALcAAgFqAAIBCQEKAAMAAQFUAAEBYAAAAAEAAAAKAAIBVgAOALgAsgCzALQAtQC2ALcAuQC6ALwAvQC+AL8AuwADAAEBUAABAWYAAAABAAAADAADAAEBcAABAXYAAAABAAAADAABAYAACAAWACAAMgBEAFYAaAB6AIwAAQAEANAAAgCYAAIABgAMANUAAgCgANMAAgChAAIABgAMANQAAgCgANYAAgChAAIABgAMANcAAgCgANgAAgChAAIABgAMANkAAgCgANoAAgChAAIABgAMANEAAgCgANIAAgChAAIABgAMANsAAgCgANwAAgChAAIABgAMAN8AAgCgAOAAAgChAAEA9gABAAgAAQAEAQwAAgBLAAEAAQCQAAIAAgBxAIsAAACwALEAGwABAAEA5QACAAEAoAClAAAAAQABAJUAAQABAJYAAgABALwAvwAAAAIAAgCgAKMAAAC8AL8ABAABAAEAdAABAAEAmAABAAIAjgCXAAIABACOAI4AAACRAJgAAQCgAKMACQClAKUADQACAAMAcQCLAAAAsACxABsA0ADQAB0AAgAEAI0AjgAAAJAAmAACAKAAowALAKUApQAPAAEAAQC6AAIABACOAI4AAACQAJcAAQCgAKMACQClAKUADQABAAgAiQCyALMAtAC1ALgAuQC7AAEAAQBIAAAAHgFuAAEAAAAAAAAATQAAAAEAAAAAAAEADQBNAAEAAAAAAAIABwBaAAEAAAAAAAMAIwBhAAEAAAAAAAQADQCEAAEAAAAAAAUACACRAAEAAAAAAAYACwCZAAEAAAAAAAcAQgCkAAEAAAAAAAgAIQDmAAEAAAAAAAkADwEHAAEAAAAAAAoATQEWAAEAAAAAAAsAFQFjAAEAAAAAAAwAFwF4AAEAAAAAABIADQGPAAEAAAAAAQAACQGcAAEAAAAAAQEAEAGlAAEAAAAAAQIAEgG1AAMAAQQJAAAAmgHHAAMAAQQJAAEAGgJhAAMAAQQJAAIADgJ7AAMAAQQJAAMARgKJAAMAAQQJAAQAGgLPAAMAAQQJAAUAEALpAAMAAQQJAAYAFgL5AAMAAQQJAAcAhAMPAAMAAQQJAAgAQgOTAAMAAQQJAAkAHgPVAAMAAQQJAAoAmgPzAAMAAQQJAAsAKgSNAAMAAQQJAAwALgS3Q29weXJpZ2h0IChjKSAyMDEwIGJ5IE11cmFzdSBTeXN0ZW1zIFNkbi4gQmhkLiBNYWxheXNpYS4gQWxsIHJpZ2h0cyByZXNlcnZlZC5MYW8gU2FuZ2FtIE1OUmVndWxhckxhbyBTYW5nYW0gTU47IDE0LjBkMWU2OyAyMDE4LTAyLTI3TGFvIFNhbmdhbSBNTjE0LjBkMWU2TGFvU2FuZ2FtTU5MYW8gU2FuZ2FtIE1OIGlzIGEgdHJhZGVtYXJrIG9mIE11cmFzdSBTeXN0ZW1zIFNkbi4gQmhkLiBNYWxheXNpYS5NdXJhc3UgU3lzdGVtcyBTZG4uIEJoZC4gTWFsYXlzaWFNdXRodSBOZWR1bWFyYW5Db3B5cmlnaHQgKGMpIDIwMTAgYnkgTXVyYXN1IFN5c3RlbXMgU2RuLiBCaGQuIE1hbGF5c2lhLiBBbGwgcmlnaHRzIHJlc2VydmVkLmh0dHA6Ly93d3cubXVyYXN1LmNvbW1haWx0bzptdXRodUBtdXJhc3UuY29tTGFvIFNhbmdhbSBNTk5vIENoYW5nZUludmFsaWQgU2VxdWVuY2VTaG93IERvdHRlZCBDaXJjbGUAQwBvAHAAeQByAGkAZwBoAHQAIAAoAGMAKQAgADIAMAAxADAAIABiAHkAIABNAHUAcgBhAHMAdQAgAFMAeQBzAHQAZQBtAHMAIABTAGQAbgAuACAAQgBoAGQALgAgAE0AYQBsAGEAeQBzAGkAYQAuACAAQQBsAGwAIAByAGkAZwBoAHQAcwAgAHIAZQBzAGUAcgB2AGUAZAAuAEwAYQBvACAAUwBhAG4AZwBhAG0AIABNAE4AUgBlAGcAdQBsAGEAcgBMAGEAbwAgAFMAYQBuAGcAYQBtACAATQBOADsAIAAxADQALgAwAGQAMQBlADYAOwAgADIAMAAxADgALQAwADIALQAyADcATABhAG8AIABTAGEAbgBnAGEAbQAgAE0ATgAxADQALgAwAGQAMQBlADYATABhAG8AUwBhAG4AZwBhAG0ATQBOAEwAYQBvACAAUwBhAG4AZwBhAG0AIABNAE4AIABpAHMAIABhACAAdAByAGEAZABlAG0AYQByAGsAIABvAGYAIABNAHUAcgBhAHMAdQAgAFMAeQBzAHQAZQBtAHMAIABTAGQAbgAuACAAQgBoAGQALgAgAE0AYQBsAGEAeQBzAGkAYQAuAE0AdQByAGEAcwB1ACAAUwB5AHMAdABlAG0AcwAgAFMAZABuAC4AIABCAGgAZAAuACAATQBhAGwAYQB5AHMAaQBhAE0AdQB0AGgAdQAgAE4AZQBkAHUAbQBhAHIAYQBuAEMAbwBwAHkAcgBpAGcAaAB0ACAAKABjACkAIAAyADAAMQAwACAAYgB5ACAATQB1AHIAYQBzAHUAIABTAHkAcwB0AGUAbQBzACAAUwBkAG4ALgAgAEIAaABkAC4AIABNAGEAbABhAHkAcwBpAGEALgAgAEEAbABsACAAcgBpAGcAaAB0AHMAIAByAGUAcwBlAHIAdgBlAGQALgBoAHQAdABwADoALwAvAHcAdwB3AC4AbQB1AHIAYQBzAHUALgBjAG8AbQBtAGEAaQBsAHQAbwA6AG0AdQB0AGgAdQBAAG0AdQByAGEAcwB1AC4AYwBvAG0AAAIAAAAAAAD/BAApAAAAAAAAAAAAAAAAAAAAAAAAAAABDQAAAQIAAwAEAAUABgAHAAgACQAKAAsADAANAA4ADwAQABEAEgATABQAFQAWABcAGAAZABoAGwAcAB0AHgAfACAAIQAiACMAJAAlACYAJwAoACkAKgArACwALQAuAC8AMAAxADIAMwA0ADUANgA3ADgAOQA6ADsAPAA9AD4APwBAAEEAQgBDAEQARQBGAEcASABJAEoASwBMAE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAIsAtgC3ALQAtQD2AIcBAwD1AQQBBQEGAPQAsgCzAQcBCAEJAQoBCwEMAQ0BDgEPARABEQESARMBFAEVARYBFwEYARkBGgEbARwBHQEeAR8BIAEhASIBIwEkASUBJgEnASgBKQEqASsBLAEtAS4BLwEwATEBMgEzATQBNQE2ATcBOAE5AToBOwE8AT0BPgE/AUABQQFCAUMBRAFFAUYBRwFIAUkBSgFLAUwBTQFOAU8BUAFRAVIBUwFUAVUBVgFXAVgBWQFaAVsBXAFdAV4BXwFgAWEBYgFjAWQBZQFmAWcBaAFpAWoBawFsAW0BbgFvAXABcQFyAXMBdAF1AXYBdwF4AXkBegF7AXwBfQF+AX8BgAGBAYIBgwGEAYUBhgGHAYgBiQGKAYsBjAGNAY4BjwGQAZEBkgGTAZQBlQGWAZcBmAGZAZoBmwGcAZ0BngGfAaABoQGiAMAETlVMTAd1bmkyNUNDB05CU1BBQ0UEWldOSgNaV0oHdW5pMjIxOQVsb19rbwtsb19raG9fc3VuZwpsb19raG9fdGFtBmxvX25nbwVsb19jbwlsb19zb190YW0GbG9fbnlvBWxvX2RvBWxvX3RvC2xvX3Rob19zdW5nCmxvX3Rob190YW0FbG9fbm8FbG9fYm8FbG9fcG8LbG9fcGhvX3N1bmcJbG9fZm9fdGFtCmxvX3Bob190YW0KbG9fZm9fc3VuZwVsb19tbwVsb195bwpsb19sb19saW5nCmxvX2xvX2xvb3QFbG9fd28KbG9fc29fc3VuZwpsb19ob19zdW5nBGxvX28JbG9faG9fdGFtC2xvX2VsbGlwc2lzB2xvX3ZzX2ENbG9fdnNfbWFpX2thbghsb192c19hYQhsb192c19hbQdsb192c19pCGxvX3ZzX2lpB2xvX3ZzX3kIbG9fdnNfeXkHbG9fdnNfdQhsb192c191dQ1sb192c19tYWlfa29uCGxvX3ZzX2xvCWxvX3ZzX255bwdsb192c19lCGxvX3ZzX2VpB2xvX3ZzX28IbG9fdnNfYXkIbG9fdnNfYWkIbG9fa29fbGEObG9fdG9uZV9tYWlfZWsPbG9fdG9uZV9tYWlfdGhvDmxvX3RvbmVfbWFpX3RpEmxvX3RvbmVfbWFpX2NhdGF3YRRsb19jYW5jZWxsYXRpb25fbWFyawxsb19uaWdnYWhpdGEHbG9femVybwZsb19vbmUGbG9fdHdvCGxvX3RocmVlB2xvX2ZvdXIHbG9fZml2ZQZsb19zaXgIbG9fc2V2ZW4IbG9fZWlnaHQHbG9fbmluZQhsb19ob19ubwhsb19ob19tbwxsb192c19pLmNvbWINbG9fdnNfaWkuY29tYgxsb192c195LmNvbWINbG9fdnNfeXkuY29tYgxsb192c191LmNvbWINbG9fdnNfdXUuY29tYhJsb192c19tYWlfa2FuLmNvbWISbG9fdnNfbWFpX2tvbi5jb21iDWxvX3ZzX2xvLmNvbWIRbG9fbmlnZ2FoaXRhLmNvbWITbG9fdG9uZV9tYWlfZWsuY29tYhRsb190b25lX21haV90aG8uY29tYhNsb190b25lX21haV90aS5jb21iF2xvX3RvbmVfbWFpX2NhdGF3YS5jb21iDGxvX3ZzX2kuMjVDQw1sb192c19paS4yNUNDDGxvX3ZzX3kuMjVDQw1sb192c195eS4yNUNDDGxvX3ZzX3UuMjVDQw1sb192c191dS4yNUNDEmxvX3ZzX21haV9rYW4uMjVDQxJsb192c19tYWlfa29uLjI1Q0MNbG9fdnNfbG8uMjVDQxFsb19uaWdnYWhpdGEuMjVDQxNsb190b25lX21haV9lay4yNUNDFGxvX3RvbmVfbWFpX3Roby4yNUNDE2xvX3RvbmVfbWFpX3RpLjI1Q0MXbG9fdG9uZV9tYWlfY2F0YXdhLjI1Q0MNbG9fdnNfYW0uMjVDQw1sb192c19hbS5jb21iDWxvX2hvX3N1bmcubG8ZbG9fdnNfbWFpX2thbi50b25lX21haV9laxpsb192c19tYWlfa2FuLnRvbmVfbWFpX3RobxRsb192c19pLnRvbmVfbWFpX3RobxRsb192c19paS50b25lX21haV9laxNsb192c19pLnRvbmVfbWFpX2VrFWxvX3ZzX2lpLnRvbmVfbWFpX3RobxNsb192c195LnRvbmVfbWFpX2VrFGxvX3ZzX3kudG9uZV9tYWlfdGhvFGxvX3ZzX3l5LnRvbmVfbWFpX2VrFWxvX3ZzX3l5LnRvbmVfbWFpX3Robxlsb192c19tYWlfa29uLnRvbmVfbWFpX2VrGmxvX3ZzX21haV9rb24udG9uZV9tYWlfdGhvFGxvX3RvbmVfbWFpX2VrLnZzX2FtFWxvX3RvbmVfbWFpX3Roby52c19hbRhsb19uaWdnYWhpdGEudG9uZV9tYWlfZWsZbG9fbmlnZ2FoaXRhLnRvbmVfbWFpX3RobwxaV05KLnZpc2libGULWldKLnZpc2libGUHdW5pMjAwQgd1bmkwMDBEDmxvX3ZzX2FtLnJpZ2h0CGxvX2tvLmFtDmxvX2tob19zdW5nLmFtDWxvX2tob190YW0uYW0JbG9fbmdvLmFtCGxvX2NvLmFtDGxvX3NvX3RhbS5hbQlsb19ueW8uYW0IbG9fZG8uYW0IbG9fdG8uYW0ObG9fdGhvX3N1bmcuYW0NbG9fdGhvX3RhbS5hbQhsb19uby5hbQhsb19iby5hbQhsb19wby5hbQ5sb19waG9fc3VuZy5hbQxsb19mb190YW0uYW0NbG9fcGhvX3RhbS5hbQ1sb19mb19zdW5nLmFtCGxvX21vLmFtCGxvX3lvLmFtDWxvX2xvX2xpbmcuYW0NbG9fbG9fbG9vdC5hbQhsb193by5hbQ1sb19zb19zdW5nLmFtDWxvX2hvX3N1bmcuYW0HbG9fby5hbQxsb19ob190YW0uYW0LbG9faG9fbm8uYW0LbG9faG9fbW8uYW0YbG9fbmlnZ2FoaXRhLnRvbmVfbWFpX3RpHGxvX25pZ2dhaGl0YS50b25lX21haV9jYXRhd2ELbG9fbmdvLnZzX3UMbG9fbmdvLnZzX3V1EmxvX3ZzX2xvLnZzX3UuY29tYhNsb192c19sby52c191dS5jb21iE2xvX3ZzX21haV9rYW4ucmlnaHQTbG9fdnNfbWFpX2tvbi5yaWdodBlsb19jYW5jZWxsYXRpb25fbWFyay5jb21iAAAAAQAAAAAAAABAAAAABGRsbmcAAABAAAAAAnNsbmcAAABCAAAAfmFwcGwAAADAAAAIsGJpbGQAAAlwAAACAGxvYXNhLGJlbSxiZXosY2dnLGRhdixlbixndXosaWQsam1jLGtkZSxrbG4sa3NiLGt3LGxvLGx1byxsdXksbWZl');
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --primary-color: #1a73e8;
+            --primary-hover: #1557b0;
             --success-color: #28a745;
             --error-color: #dc3545;
-            --bg-color: #f0f2f5;
-            --text-color: #333;
+            --warning-color: #f44336;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            color: var(--text-main);
         }
 
         .container {
-            background-color: white;
+            background-color: var(--card-bg);
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            width: 95%;
+            max-width: 550px;
             text-align: center;
+            position: relative;
         }
 
-        h1 { color: var(--primary-color); margin-bottom: 1.5rem; }
-        .screen { display: none; }
+        .version-badge {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            font-weight: 600;
+            opacity: 0.6;
+        }
+
+        h1 { 
+            color: var(--primary-color); 
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+        }
+
+        .screen { display: none; animation: fadeIn 0.4s ease; }
         .active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 12px 28px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
-            font-weight: bold;
-            transition: background-color 0.2s;
+            font-weight: 600;
+            transition: all 0.2s;
             margin-top: 1rem;
+            box-shadow: 0 2px 5px rgba(26, 115, 232, 0.2);
         }
 
-        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
-        .btn:hover:not(:disabled) { background-color: #1557b0; }
+        .btn:hover { 
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 8px rgba(26, 115, 232, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
         input[type="text"] {
-            width: 80%;
-            padding: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 16px;
             margin: 1rem 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1.1rem;
             outline: none;
         }
 
         input[type="text"]:focus { border-color: var(--primary-color); }
-        .question-info { color: #666; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
-        
-        .word-display { 
-            font-family: 'Lao Sangam MN', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 2.5rem; 
-            font-weight: bold; 
-            margin: 1.5rem 0; 
-            color: #333; 
-        }
+        input[type="text"]:disabled { background-color: #f5f5f5; }
 
-        .feedback { margin-top: 1rem; font-weight: bold; min-height: 1.5rem; }
-        .correct { color: var(--success-color); }
-        .incorrect { color: var(--error-color); }
-        .result-text { font-size: 1.2rem; margin: 1.5rem 0; line-height: 1.6; }
-        #loading-msg { color: #666; margin-bottom: 1rem; }
-
-        /* Ver0.5からの追加スタイル */
         .progress-container {
             width: 100%;
-            height: 8px;
-            background-color: #e0e0e0;
-            border-radius: 4px;
+            height: 4px;
+            background-color: #eee;
+            border-radius: 2px;
             margin-bottom: 1.5rem;
             overflow: hidden;
         }
+
         .progress-bar {
             height: 100%;
             background-color: var(--primary-color);
             width: 0%;
             transition: width 0.3s ease;
         }
-        .sending-msg { font-size: 0.9rem; color: #666; margin-top: 10px; }
+
+        .question-info { 
+            color: var(--text-muted); 
+            font-size: 0.85rem;
+            margin-bottom: 1rem; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            width: 80px;
+            height: 80px;
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: #eee;
+            stroke-width: 6;
+        }
+
+        .timer-circle-progress {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 226.08;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke 0.3s;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .timer-circle-progress.warning {
+            stroke: var(--warning-color);
+        }
+
+        .word-display { 
+            font-family: 'Lao Sangam MN Custom', 'Lao Sangam MN', 'Phetsarath OT', 'Sayssettha OT', sans-serif;
+            font-size: 2.8rem; 
+            font-weight: bold; 
+            margin: 1.5rem 0; 
+            color: #222;
+            word-break: break-all;
+        }
+
+        .feedback { 
+            margin-top: 0.5rem; 
+            font-weight: bold; 
+            min-height: 3rem;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
+
+        .correct { background-color: #e8f5e9; color: var(--success-color); }
+        .incorrect { background-color: #ffebee; color: var(--error-color); }
+        .timeout { background-color: #fff3cd; color: #856404; }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .history-container {
+            margin-top: 2rem;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .history-item {
+            padding: 8px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .history-item:last-child { border-bottom: none; }
+        .history-lao { font-weight: bold; font-family: 'Lao Sangam MN Custom', 'Lao Sangam MN', sans-serif; }
+        .history-ans { color: var(--text-muted); }
+        .history-status { font-weight: bold; }
+        .status-correct { color: var(--success-color); }
+        .status-incorrect { color: var(--error-color); }
+
+        .hint-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-style: italic;
+            min-height: 1rem;
+        }
+
+        .sending-msg { font-size: 0.85rem; color: #666; margin-top: 10px; }
+
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem; }
+            .word-display { font-size: 2.2rem; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- スタート画面 -->
+    <div class="version-badge">Ver0.5+</div>
+
     <div id="start-screen" class="screen active">
         <h1>ラオス語単語クイズ</h1>
-        <div id="loading-msg">CSVファイルを読み込んでいます...</div>
-        <p>画像を見て、正しい名前を選んでください。<br>全問からランダムに10問出題されます。</p>
-        <button class="btn" id="start-btn" onclick="startQuiz()" disabled>開始する</button>
+        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">農業関連のラオス語単語を学習しましょう</p>
+        <div id="loading-msg" style="margin-bottom: 1rem; font-weight: bold; color: var(--primary-color);">CSVファイルを読み込んでいます...</div>
+        <div style="background: #eef4ff; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: left; font-size: 0.85rem;">
+            <p style="margin: 0 0 0.5rem 0;"><strong>ルール:</strong></p>
+            <ul style="margin: 0; padding-left: 1.2rem;">
+                <li>全10問のランダム出題</li>
+                <li>日本語（漢字・ひらがな）で回答</li>
+                <li><strong>入力中はタイマーが停止します</strong></li>
+                <li><strong>制限時間: 1問20秒</strong></li>
+                <li><strong>Enterキーで回答・次へ進む</strong></li>
+            </ul>
+        </div>
+        <button class="btn" id="start-btn" onclick="startQuiz()" disabled>クイズを開始する</button>
     </div>
 
-    <!-- クイズ画面 -->
     <div id="quiz-screen" class="screen">
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar"></div>
         </div>
+        
         <div class="question-info">
             <span>第 <span id="current-num">1</span> 問 / 10</span>
-            <span id="score-display">正解: 0</span>
+            <span id="current-score-display">正解: 0</span>
         </div>
+
+        <div class="timer-container">
+            <svg class="timer-svg" viewBox="0 0 80 80">
+                <circle class="timer-circle-bg" cx="40" cy="40" r="36"></circle>
+                <circle id="timer-progress" class="timer-circle-progress" cx="40" cy="40" r="36"></circle>
+            </svg>
+            <div id="timer-text" class="timer-text">20</div>
+        </div>
+
         <div class="word-display" id="word-target">---</div>
-        <p>この単語の日本語（単語またはふりがな）を入力してください</p>
-        <input type="text" id="answer-input" placeholder="回答を入力..." autocomplete="off">
+        
+        <input type="text" id="answer-input" placeholder="日本語を入力..." autocomplete="off" spellcheck="false">
+        
         <div id="feedback" class="feedback"></div>
-        <button class="btn" id="submit-btn" onclick="checkAnswer()">回答する</button>
-        <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">次へ進む</button>
+        <div class="hint-text" id="hint-text"></div>
+        
+        <div id="action-area">
+            <button class="btn" id="submit-btn" onclick="checkAnswer()">回答する</button>
+            <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">次へ進む (Enter)</button>
+        </div>
     </div>
 
-    <!-- リザルト画面 -->
     <div id="result-screen" class="screen">
         <h1>結果発表</h1>
-        <div class="result-text">
-            <p>お疲れ様でした。</p>
-            <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">
-                <span id="score">0</span> / 10
-            </p>
-            <p>正答率: <span id="accuracy">0</span>%</p>
+        <div class="result-stats">
+            <div class="stat-card">
+                <div class="stat-value"><span id="score">0</span> / 10</div>
+                <div class="stat-label">正解数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><span id="accuracy">0</span>%</div>
+                <div class="stat-label">正解率</div>
+            </div>
         </div>
+        <p id="result-message" style="font-size: 1rem; margin-bottom: 1rem;"></p>
+        
         <div id="sending-msg" class="sending-msg">結果を送信中...</div>
-        <button class="btn" onclick="location.reload()">もう一度挑戦</button>
+
+        <div class="history-container" id="history-list">
+            <!-- 履歴がここに挿入されます -->
+        </div>
+        
+        <button class="btn" onclick="location.reload()">もう一度挑戦する</button>
     </div>
 </div>
 
@@ -145,12 +350,17 @@
     // 設定
     const GAS_URL = "ここにGASのウェブアプリURLを貼り付けてください"; 
     const TOTAL_QUESTIONS = 10;
+    const TIME_LIMIT = 20;
+    const CIRCLE_CIRCUMFERENCE = 226.08;
 
     let wordDict = {};
     let uniqueLaoWords = [];
     let currentQuestions = [];
     let currentIndex = 0;
     let score = 0;
+    let timerInterval = null;
+    let timeRemaining = TIME_LIMIT;
+    let quizHistory = [];
     let deviceId = localStorage.getItem('quiz_device_id') || 'Device-' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('quiz_device_id', deviceId);
 
@@ -166,7 +376,7 @@
             document.getElementById('loading-msg').textContent = 'CSVの読み込みが完了しました。';
             document.getElementById('start-btn').disabled = false;
         } catch (error) {
-            document.getElementById('loading-msg').textContent = 'エラー: ' + error.message + ' (HTMLファイルと同じ場所に「wordlist.csv」を置いてください)';
+            document.getElementById('loading-msg').textContent = 'エラー: ' + error.message + ' (wordlist.csvを確認してください)';
             document.getElementById('loading-msg').style.color = 'red';
         }
     };
@@ -206,6 +416,7 @@
         currentQuestions = [...uniqueLaoWords].sort(() => 0.5 - Math.random()).slice(0, TOTAL_QUESTIONS);
         currentIndex = 0;
         score = 0;
+        quizHistory = [];
         showScreen('quiz-screen');
         showQuestion();
     }
@@ -214,15 +425,26 @@
         const lao = currentQuestions[currentIndex];
         document.getElementById('current-num').textContent = currentIndex + 1;
         document.getElementById('word-target').textContent = lao;
-        document.getElementById('score-display').textContent = `正解: ${score}`;
-        document.getElementById('answer-input').value = '';
-        document.getElementById('answer-input').disabled = false;
-        document.getElementById('feedback').textContent = '';
-        document.getElementById('feedback').className = 'feedback';
+        document.getElementById('current-score-display').textContent = `正解: ${score}`;
+        
+        const input = document.getElementById('answer-input');
+        input.value = '';
+        input.disabled = false;
+        
+        const feedback = document.getElementById('feedback');
+        feedback.textContent = '';
+        feedback.className = 'feedback';
+        
+        document.getElementById('hint-text').textContent = '';
         document.getElementById('submit-btn').style.display = 'inline-block';
         document.getElementById('next-btn').style.display = 'none';
+        
         updateProgressBar();
-        document.getElementById('answer-input').focus();
+        input.focus();
+        
+        timeRemaining = TIME_LIMIT;
+        updateTimerUI();
+        startTimer();
     }
 
     function updateProgressBar() {
@@ -230,7 +452,51 @@
         document.getElementById('progress-bar').style.width = `${progress}%`;
     }
 
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            // 入力欄が空の場合のみタイマーを進める
+            const inputVal = document.getElementById('answer-input').value.trim();
+            if (inputVal === "") {
+                timeRemaining--;
+                updateTimerUI();
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const timerText = document.getElementById('timer-text');
+        const timerProgress = document.getElementById('timer-progress');
+        timerText.textContent = timeRemaining;
+        const offset = CIRCLE_CIRCUMFERENCE - (timeRemaining / TIME_LIMIT) * CIRCLE_CIRCUMFERENCE;
+        timerProgress.style.strokeDashoffset = offset;
+        if (timeRemaining <= 5) timerProgress.classList.add('warning');
+        else timerProgress.classList.remove('warning');
+    }
+
+    function handleTimeout() {
+        const lao = currentQuestions[currentIndex];
+        const correctAnswers = wordDict[lao];
+        const correctText = Array.from(correctAnswers).join('」または「');
+        const feedback = document.getElementById('feedback');
+        
+        feedback.textContent = `時間切れ！ 正解は「${correctText}」でした`;
+        feedback.className = 'feedback timeout';
+        document.getElementById('hint-text').textContent = 'Enterキーで次へ進みます';
+        
+        quizHistory.push({ lao: lao, correct: correctText, status: 'timeout' });
+        
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'inline-block';
+        document.getElementById('answer-input').disabled = true;
+    }
+
     function checkAnswer() {
+        clearInterval(timerInterval);
         const inputElement = document.getElementById('answer-input');
         const rawInput = inputElement.value.trim();
         if (!rawInput) return;
@@ -238,6 +504,7 @@
         const normalizedInput = normalizeText(rawInput);
         const lao = currentQuestions[currentIndex];
         const correctAnswers = wordDict[lao];
+        const correctText = Array.from(correctAnswers).join('」または「');
         const feedback = document.getElementById('feedback');
         
         let isCorrect = false;
@@ -249,20 +516,21 @@
         }
         
         if (isCorrect) {
-            feedback.textContent = '正解！';
+            feedback.textContent = '正解です！素晴らしい！';
             feedback.className = 'feedback correct';
             score++;
+            quizHistory.push({ lao: lao, correct: correctText, status: 'correct' });
         } else {
-            // 正解のテキストを取得（簡易版）
-            const correctText = Array.from(correctAnswers).join('」または「');
             feedback.textContent = `不正解... 正解は「${correctText}」でした`;
             feedback.className = 'feedback incorrect';
+            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect' });
         }
         
-        document.getElementById('score-display').textContent = `正解: ${score}`;
+        document.getElementById('hint-text').textContent = 'Enterキーで次へ進みます';
         document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'inline-block';
         inputElement.disabled = true;
+        document.getElementById('current-score-display').textContent = `正解: ${score}`;
     }
 
     function nextQuestion() {
@@ -271,14 +539,41 @@
             showQuestion();
         } else {
             document.getElementById('progress-bar').style.width = '100%';
-            showResult();
+            setTimeout(showResult, 300);
         }
     }
 
     function showResult() {
+        clearInterval(timerInterval);
         document.getElementById('score').textContent = score;
         const accuracy = Math.round((score / TOTAL_QUESTIONS) * 100);
         document.getElementById('accuracy').textContent = accuracy;
+        
+        let message = "";
+        if (accuracy === 100) message = "完璧です！全問正解おめでとうございます！";
+        else if (accuracy >= 80) message = "素晴らしい成績です！その調子で頑張りましょう。";
+        else if (accuracy >= 60) message = "合格点です。さらに上を目指しましょう！";
+        else message = "もう少し練習が必要かもしれません。もう一度挑戦してみましょう！";
+        document.getElementById('result-message').textContent = message;
+
+        // 履歴の表示
+        const historyList = document.getElementById('history-list');
+        historyList.innerHTML = '<h3 style="font-size: 1rem; margin-top: 0;">今回の問題と正解:</h3>';
+        quizHistory.forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            const statusText = item.status === 'correct' ? '○' : (item.status === 'timeout' ? '△' : '×');
+            const statusClass = item.status === 'correct' ? 'status-correct' : 'status-incorrect';
+            div.innerHTML = `
+                <div>
+                    <span class="history-lao">${idx + 1}. ${item.lao}</span>
+                    <br><span class="history-ans">正解: ${item.correct}</span>
+                </div>
+                <span class="history-status ${statusClass}">${statusText}</span>
+            `;
+            historyList.appendChild(div);
+        });
+
         showScreen('result-screen');
         sendToGAS(score, TOTAL_QUESTIONS);
     }
@@ -291,16 +586,18 @@
         }
 
         try {
+            // URLSearchParamsを使用してフォーム形式で送信（CORS回避の可能性を高める）
+            const formData = new URLSearchParams();
+            formData.append('correct', score);
+            formData.append('total', total);
+            formData.append('deviceId', deviceId);
+            formData.append('timestamp', new Date().toISOString());
+
             await fetch(GAS_URL, {
                 method: "POST",
                 mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    correct: score,
-                    total: total,
-                    deviceId: deviceId,
-                    timestamp: new Date().toISOString()
-                })
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData.toString()
             });
             msg.textContent = "結果をスプレッドシートに送信しました。";
             msg.style.color = "var(--success-color)";
@@ -315,12 +612,18 @@
         document.getElementById(screenId).classList.add('active');
     }
 
-    document.getElementById('answer-input').addEventListener('keypress', function(e) {
+    window.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            if (document.getElementById('submit-btn').style.display !== 'none') {
-                checkAnswer();
-            } else if (document.getElementById('next-btn').style.display !== 'none') {
-                nextQuestion();
+            const submitBtn = document.getElementById('submit-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const quizScreen = document.getElementById('quiz-screen');
+            
+            if (quizScreen.classList.contains('active')) {
+                if (submitBtn.style.display !== 'none') {
+                    checkAnswer();
+                } else if (nextBtn.style.display !== 'none') {
+                    nextQuestion();
+                }
             }
         }
     });
