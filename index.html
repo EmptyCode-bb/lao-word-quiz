@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ラオス語単語クイズ</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 { color: #1a73e8; margin-bottom: 1.5rem; }
+        .screen { display: none; }
+        .active { display: block; }
+        .btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { background-color: #1557b0; }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 1rem 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        input[type="text"]:focus { border-color: #1a73e8; }
+        .question-info { color: #666; margin-bottom: 0.5rem; }
+        .word-display { 
+            font-family: 'Lao Sangam MN', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 2.5rem; 
+            font-weight: bold; 
+            margin: 1.5rem 0; 
+            color: #333; 
+        }
+        .feedback { margin-top: 1rem; font-weight: bold; min-height: 1.5rem; }
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+        .result-text { font-size: 1.2rem; margin: 1.5rem 0; line-height: 1.6; }
+        #loading-msg { color: #666; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- スタート画面 -->
+    <div id="start-screen" class="screen active">
+        <h1>単語クイズ</h1>
+        <div id="loading-msg">CSVファイルを読み込んでいます...</div>
+        <p>ラオス語の単語クイズを開始します（全10問）</p>
+        <button class="btn" id="start-btn" onclick="startQuiz()" disabled>開始する</button>
+    </div>
+
+    <!-- クイズ画面 -->
+    <div id="quiz-screen" class="screen">
+        <div class="question-info">第 <span id="current-num">1</span> 問 / 10</div>
+        <div class="word-display" id="word-target">---</div>
+        <p>この単語の日本語（単語またはふりがな）を入力してください</p>
+        <input type="text" id="answer-input" placeholder="回答を入力..." autocomplete="off">
+        <div id="feedback" class="feedback"></div>
+        <button class="btn" id="submit-btn" onclick="checkAnswer()">回答する</button>
+        <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">次へ</button>
+    </div>
+
+    <!-- リザルト画面 -->
+    <div id="result-screen" class="screen">
+        <h1>結果発表</h1>
+        <div class="result-text">
+            <p>お疲れ様でした。</p>
+            <p>正解数: <span id="score">0</span> / 10</p>
+        </div>
+        <button class="btn" onclick="location.reload()">もう一度挑戦</button>
+    </div>
+</div>
+
+<script>
+    let wordDict = {};
+    let uniqueLaoWords = [];
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+
+    // ページ読み込み時にCSVを読み込む
+    window.onload = async () => {
+        try {
+            const response = await fetch('wordlist.csv');
+            if (!response.ok) throw new Error('CSVファイルの読み込みに失敗しました。');
+            
+            const text = await response.text();
+            parseCSV(text);
+            
+            document.getElementById('loading-msg').textContent = 'CSVの読み込みが完了しました。';
+            document.getElementById('start-btn').disabled = false;
+        } catch (error) {
+            document.getElementById('loading-msg').textContent = 'エラー: ' + error.message + ' (HTMLファイルと同じ場所に「wordlist.csv」を置いてください)';
+            document.getElementById('loading-msg').style.color = 'red';
+        }
+    };
+
+    function parseCSV(text) {
+        const lines = text.split(/\r?\n/);
+        wordDict = {};
+        
+        // 2行目から読み込み（1行目はヘッダー）
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            
+            // カンマ区切りで分割（引用符内のカンマを考慮しない簡易版）
+            const parts = line.split(',');
+            if (parts.length < 3) continue;
+            
+            const kanji = parts[0].trim();
+            const kana = parts[1].trim();
+            let lao = parts[2].trim();
+            // ラオス語の前後の空白を削除
+            lao = lao.replace(/^\s+|\s+$/g, '');
+            
+            if (!wordDict[lao]) {
+                wordDict[lao] = new Set();
+            }
+            wordDict[lao].add(kanji);
+            wordDict[lao].add(kana);
+        }
+        uniqueLaoWords = Object.keys(wordDict);
+    }
+
+    function startQuiz() {
+        if (uniqueLaoWords.length === 0) return;
+        
+        // ランダムに10問選ぶ
+        currentQuestions = [...uniqueLaoWords].sort(() => 0.5 - Math.random()).slice(0, 10);
+        currentIndex = 0;
+        score = 0;
+        
+        showScreen('quiz-screen');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const lao = currentQuestions[currentIndex];
+        document.getElementById('current-num').textContent = currentIndex + 1;
+        document.getElementById('word-target').textContent = lao;
+        document.getElementById('answer-input').value = '';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = 'feedback';
+        document.getElementById('submit-btn').style.display = 'inline-block';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('answer-input').disabled = false;
+        document.getElementById('answer-input').focus();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('answer-input').value.trim();
+        if (!input) return;
+
+        const lao = currentQuestions[currentIndex];
+        const correctAnswers = wordDict[lao];
+        const feedback = document.getElementById('feedback');
+        
+        if (correctAnswers.has(input)) {
+            feedback.textContent = '正解！';
+            feedback.className = 'feedback correct';
+            score++;
+        } else {
+            const answersArray = Array.from(correctAnswers);
+            feedback.textContent = `不正解... 正解は「${answersArray.join('」または「')}」です`;
+            feedback.className = 'feedback incorrect';
+        }
+
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'inline-block';
+        document.getElementById('answer-input').disabled = true;
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < 10) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('score').textContent = score;
+        showScreen('result-screen');
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // Enterキーで回答・次へ
+    document.getElementById('answer-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            if (document.getElementById('submit-btn').style.display !== 'none') {
+                checkAnswer();
+            } else {
+                nextQuestion();
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
