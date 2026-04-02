@@ -364,7 +364,7 @@
     let quizHistory = [];
     let deviceId = localStorage.getItem('quiz_device_id') || 'Device-' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('quiz_device_id', deviceId);
-    let speechUtterance = null;              // 音声再生用のUtterance
+    let speechUtterance = null;
 
     // ページ読み込み時にCSVを読み込む
     window.onload = async () => {
@@ -521,21 +521,12 @@
             feedback.textContent = '正解です！素晴らしい！';
             feedback.className = 'feedback correct';
             score++;
-
- // 【要件③④】不正解時に正解テキストをクリック可能にして音声再生機能を追加
-            const feedbackHTML = `不正解... 正解は<span class="clickable-answer" data-text="${correctText}" style="cursor: pointer; text-decoration: underline; font-weight: bold;">「${correctText}」</span>でした`;
-            feedback.innerHTML = feedbackHTML;
+            quizHistory.push({ lao: lao, correct: correctText, status: 'correct' });
+        } else {
+            feedback.textContent = `不正解... 正解は「${correctText}」でした`;
             feedback.className = 'feedback incorrect';
-            
-            // クリック可能な正解テキストにイベントリスナーを追加
-            const clickableSpan = feedback.querySelector('.clickable-answer');
-            if (clickableSpan) {
-                clickableSpan.addEventListener('click', function() {
-                    playAnswerAudio(this.getAttribute('data-text'));
-                });
-            }
 
-            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect', time: responseTime });
+            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect' });
         }
         
         document.getElementById('hint-text').textContent = 'Enterキーで次へ進みます';
