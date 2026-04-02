@@ -364,6 +364,7 @@
     let quizHistory = [];
     let deviceId = localStorage.getItem('quiz_device_id') || 'Device-' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('quiz_device_id', deviceId);
+    let speechUtterance = null;              // 音声再生用のUtterance
 
     // ページ読み込み時にCSVを読み込む
     window.onload = async () => {
@@ -520,6 +521,20 @@
             feedback.textContent = '正解です！素晴らしい！';
             feedback.className = 'feedback correct';
             score++;
+
+ // 【要件③④】不正解時に正解テキストをクリック可能にして音声再生機能を追加
+            const feedbackHTML = `不正解... 正解は<span class="clickable-answer" data-text="${correctText}" style="cursor: pointer; text-decoration: underline; font-weight: bold;">「${correctText}」</span>でした`;
+            feedback.innerHTML = feedbackHTML;
+            feedback.className = 'feedback incorrect';
+            
+            // クリック可能な正解テキストにイベントリスナーを追加
+            const clickableSpan = feedback.querySelector('.clickable-answer');
+            if (clickableSpan) {
+                clickableSpan.addEventListener('click', function() {
+                    playAnswerAudio(this.getAttribute('data-text'));
+                });
+            }
+
             quizHistory.push({ lao: lao, correct: correctText, status: 'correct' });
         } else {
             feedback.textContent = `不正解... 正解は「${correctText}」でした`;
@@ -607,6 +622,23 @@
             msg.style.color = "var(--error-color)";
         }
     }
+
+    // 【要件③④】Web Speech APIを使用した音声再生関数
+    function playAnswerAudio(text) {
+        // 前の音声が再生中であれば停止
+        if (speechUtterance) {
+            window.speechSynthesis.cancel();
+        }
+        
+        // 新しい音声再生を作成
+        speechUtterance = new SpeechSynthesisUtterance(text);
+        speechUtterance.lang = 'ja-JP';
+        speechUtterance.rate = 1;
+        speechUtterance.pitch = 1;
+        
+        window.speechSynthesis.speak(speechUtterance);
+    }
+
 
     function showScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
