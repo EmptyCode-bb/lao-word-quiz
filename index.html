@@ -580,7 +580,7 @@
 
     async function sendToGAS(score, total) {
         const msg = document.getElementById('sending-msg');
-        if (!GAS_URL || GAS_URL.includes("https://script.google.com/macros/s/AKfycbxTNUxdK4cty9MRNHisjGtSfiYm9qWl0_bYHa9LEHOWKi3mQD5-0Txw1W5oMIpvgLsPkA/exec")) {
+        if (!GAS_URL || GAS_URL.includes("ここ")) {
             msg.textContent = "※GASのURLが設定されていないため、送信をスキップしました。";
             return;
         }
