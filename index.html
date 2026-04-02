@@ -363,13 +363,6 @@
     let quizHistory = [];
     let deviceId = localStorage.getItem('quiz_device_id') || 'Device-' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('quiz_device_id', deviceId);
-    
-    // 【要件①②③④】回答時間計測、入力検知、音声再生の制御用変数
-    let responseTime = 0;                    // 各問題の回答時間（秒）
-    let timerStartTime = 0;                  // タイマー開始時刻
-    let inputDetected = false;               // 入力検知フラグ（1問につき1回のみ）
-    let inputStopTime = 0;                   // 入力検知時刻
-    let speechUtterance = null;              // 音声再生用のUtterance
 
     // ページ読み込み時にCSVを読み込む
     window.onload = async () => {
@@ -451,12 +444,6 @@
         
         timeRemaining = TIME_LIMIT;
         updateTimerUI();
-        
-        // 【要件①】問題ごとに入力検知フラグをリセット、タイマー開始時刻を記録
-        inputDetected = false;
-        timerStartTime = Date.now();
-        responseTime = 0;
-        
         startTimer();
     }
 
@@ -479,25 +466,6 @@
                 }
             }
         }, 1000);
-    }
-    
-    // 【要件①②】入力検知時のタイマー停止処理（15秒制限付き）
-    function handleInputDetection() {
-        if (inputDetected) return; // 1問につき1回のみ
-        inputDetected = true;
-        inputStopTime = Date.now();
-        
-        // 入力開始からの経過時間を計算
-        const elapsedMs = inputStopTime - timerStartTime;
-        const elapsedSec = Math.round(elapsedMs / 1000);
-        
-        // 15秒以内であればタイマーを停止、超えていれば停止処理を解除
-        if (elapsedSec <= 15) {
-            responseTime = elapsedSec;
-            clearInterval(timerInterval); // タイマー停止
-        } else {
-            inputDetected = false; // 15秒超過時は停止処理を解除
-        }
     }
 
     function updateTimerUI() {
@@ -551,23 +519,11 @@
             feedback.textContent = '正解です！素晴らしい！';
             feedback.className = 'feedback correct';
             score++;
-            // 【要件①】回答時間を記録
-            quizHistory.push({ lao: lao, correct: correctText, status: 'correct', time: responseTime });
+            quizHistory.push({ lao: lao, correct: correctText, status: 'correct' });
         } else {
-            // 【要件③④】不正解時に正解テキストをクリック可能にして音声再生機能を追加
-            const feedbackHTML = `不正解... 正解は<span class="clickable-answer" data-text="${correctText}" style="cursor: pointer; text-decoration: underline; font-weight: bold;">「${correctText}」</span>でした`;
-            feedback.innerHTML = feedbackHTML;
+            feedback.textContent = `不正解... 正解は「${correctText}」でした`;
             feedback.className = 'feedback incorrect';
-            
-            // クリック可能な正解テキストにイベントリスナーを追加
-            const clickableSpan = feedback.querySelector('.clickable-answer');
-            if (clickableSpan) {
-                clickableSpan.addEventListener('click', function() {
-                    playAnswerAudio(this.getAttribute('data-text'));
-                });
-            }
-            
-            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect', time: responseTime });
+            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect' });
         }
         
         document.getElementById('hint-text').textContent = 'Enterキーで次へ進みます';
@@ -624,7 +580,7 @@
 
     async function sendToGAS(score, total) {
         const msg = document.getElementById('sending-msg');
-        if (!GAS_URL || GAS_URL.includes("ここ")) {
+        if (!GAS_URL || GAS_URL.includes("ここに")) {
             msg.textContent = "※GASのURLが設定されていないため、送信をスキップしました。";
             return;
         }
@@ -655,34 +611,10 @@
         }
     }
 
-    // 【要件③④】Web Speech APIを使用した音声再生関数
-    function playAnswerAudio(text) {
-        // 前の音声が再生中であれば停止
-        if (speechUtterance) {
-            window.speechSynthesis.cancel();
-        }
-        
-        // 新しい音声再生を作成
-        speechUtterance = new SpeechSynthesisUtterance(text);
-        speechUtterance.lang = 'ja-JP';
-        speechUtterance.rate = 1;
-        speechUtterance.pitch = 1;
-        
-        window.speechSynthesis.speak(speechUtterance);
-    }
-
     function showScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
-
-    // 【要件②】入力イベント（input）でタイマー停止トリガーを発動
-    document.addEventListener('DOMContentLoaded', function() {
-        const answerInput = document.getElementById('answer-input');
-        if (answerInput) {
-            answerInput.addEventListener('input', handleInputDetection);
-        }
-    });
 
     window.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
