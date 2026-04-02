@@ -535,11 +535,7 @@
                 });
             }
 
-            quizHistory.push({ lao: lao, correct: correctText, status: 'correct' });
-        } else {
-            feedback.textContent = `不正解... 正解は「${correctText}」でした`;
-            feedback.className = 'feedback incorrect';
-            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect' });
+            quizHistory.push({ lao: lao, correct: correctText, status: 'incorrect', time: responseTime });
         }
         
         document.getElementById('hint-text').textContent = 'Enterキーで次へ進みます';
